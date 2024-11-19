@@ -14,7 +14,7 @@ def create_user(db: Session, user: models.User):
     return user
 
 def update_user(db: Session, user_id: int, nome: str, email:str, idade:int):
-    user = get_users(db, user_id)
+    user = get_user(db, user_id)
     if user:
         user.nome = nome
         user.email = email

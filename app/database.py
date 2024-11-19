@@ -1,12 +1,13 @@
 from sqlalchemy import create_engine
-from sqlalchemy import sessionmaker
+from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 import time
 
-SQLALCHEMY_DATABASE_URL = "sqlite:///ban.bd"
+SQLALCHEMY_DATABASE_URL = "sqlite:///./ban.bd"
+
 
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
-SenssionLocal = sessionmaker(autocommit=False, autoFlush=False, bind=engine)
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
 
 connected = False
@@ -16,10 +17,11 @@ while not connected:
         connected = True
     except Exception as e:
         print(f"Erro ao conectar ao banco de dados: {e}")
-        time.sleep(5)
+        time.sleep(5)  
 def get_db():
-    db = SenssionLocal()
+    db = SessionLocal()
     try:
         yield db
     finally:
         db.close()
+
