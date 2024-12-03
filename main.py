@@ -9,8 +9,21 @@ models.Base.metadata.create_all(bind=database.engine)
 
 @app.get("/")
 def read_root():
-    return {"message": "Desafio Fastapi JabutiAGI"}
+    return {"message": "mentoria com Fernanda e Yara."}
 
+
+@app.get("/usuarios/total/")
+def total_users(db: Session = Depends(database.get_db)):
+    todos = crud.get_total(db)
+    return {"todos": todos}
+
+@app.get("/usuarios/busca/")
+def search_users(nome: str ,db: Session = Depends(database.get_db)):
+    users = crud.get_for_name(db, nome=nome)
+    if not users:
+        raise HTTPException(status_code=404, detail="nome não encontrado")
+    return {"users": [nome[0] for nome in users]}
+    
 @app.get("/usuarios/")
 def read_users(skip: int = 0, limit: int = 10, db: Session = Depends(database.get_db)):
     users = crud.get_users(db, skip=skip, limit=limit)

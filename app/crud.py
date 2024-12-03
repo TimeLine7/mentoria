@@ -1,6 +1,12 @@
 from sqlalchemy.orm import Session
 from . import models
 
+def get_total(db: Session):
+    return db.query(models.User).all()
+
+def get_for_name(db: Session, nome: str):
+    return db.query(models.User.nome).filter(models.User.nome.ilike(f"%{nome}%")).all()
+
 def get_user(db: Session, user_id: int):
     return db.query(models.User).filter(models.User.id == user_id).first()
 

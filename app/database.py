@@ -1,27 +1,25 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
+from dotenv import load_dotenv
 import time
+import os
 
-SQLALCHEMY_DATABASE_URL = "sqlite:///./ban.bd"
+load_dotenv()
 
 
-engine = create_engine(SQLALCHEMY_DATABASE_URL)
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+DATABASE_URL =os.getenv("DATABASE_URL","sqlite:///./ban.bd")
+
+
+engine = create_engine(DATABASE_URL, connect_args={"check_same_thread":False} if "sqlite" in DATABASE_URL else {})
+
+SenssionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
 Base = declarative_base()
 
-connected = False
-while not connected:
-    try:
-        engine = create_engine(SQLALCHEMY_DATABASE_URL)
-        connected = True
-    except Exception as e:
-        print(f"Erro ao conectar ao banco de dados: {e}")
-        time.sleep(5)  
 def get_db():
-    db = SessionLocal()
+    db = SenssionLocal()
     try:
         yield db
     finally:
         db.close()
-
